@@ -1,90 +1,113 @@
 # Get Started
 
+You may find complete project setups in [get-started examples](https://github.com/visgl/react-map-gl/tree/8.0-release/examples/get-started).
 
 ## Installation
 
-Using `react-map-gl` requires `node >= v4` and `react >= 16.3`.
+Using `react-map-gl` requires `node >= 12` and `react >= 16.3`.
 
-```sh
-npm install --save react-map-gl
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="map-library">
+  <TabItem value="mapbox" label="Mapbox">
+
+```bash
+npm install react-map-gl mapbox-gl @types/mapbox-gl
 ```
+
+  </TabItem>
+  <TabItem value="maplibre" label="Maplibre">
+
+```bash
+npm install react-map-gl maplibre-gl
+```
+
+  </TabItem>
+</Tabs>
 
 ## Example
 
-```js
+<Tabs groupId="map-library">
+  <TabItem value="mapbox" label="Mapbox">
+
+```tsx title="app.tsx"
 import * as React from 'react';
-import { useState } from 'react';
-import ReactMapGL from 'react-map-gl';
+import Map from 'react-map-gl/mapbox';
+// If using with mapbox-gl v1:
+// import Map from 'react-map-gl/mapbox-legacy';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
-function Map() {
-  const [viewport, setViewport] = useState({
-    width: 400,
-    height: 400,
-    latitude: 37.7577,
-    longitude: -122.4376,
-    zoom: 8
-  });
-
+function App() {
   return (
-    <ReactMapGL
-      {...viewport}
-      onViewportChange={nextViewport => setViewport(nextViewport)}
+    <Map
+      mapboxAccessToken="<Mapbox access token>"
+      initialViewState={{
+        longitude: -122.4,
+        latitude: 37.8,
+        zoom: 14
+      }}
+      style={{width: 600, height: 400}}
+      mapStyle="mapbox://styles/mapbox/streets-v9"
     />
   );
 }
 ```
 
-See full project setup in [get-started examples](https://github.com/uber/react-map-gl/tree/5.2-release/examples/get-started)
+See [about Mapbox tokens](./mapbox-tokens.md) for alternatives to providing a Mapbox token.
+
+  </TabItem>
+  <TabItem value="maplibre" label="Maplibre">
+
+```tsx title="app.tsx"
+import * as React from 'react';
+import Map from 'react-map-gl/maplibre';
+import 'maplibre-gl/dist/maplibre-gl.css';
+
+function App() {
+  return (
+    <Map
+      initialViewState={{
+        longitude: -122.4,
+        latitude: 37.8,
+        zoom: 14
+      }}
+      style={{width: 600, height: 400}}
+      mapStyle="https://api.maptiler.com/maps/streets/style.json?key=get_your_own_key"
+    />
+  );
+}
+```
+
+  </TabItem>
+</Tabs>
+
 
 ## Styling
 
-The current mapbox-gl release requires its stylesheet be included at all times. The marker, popup and navigation components in react-map-gl also need the stylesheet to work properly.
+The base map library requires its stylesheet be included at all times. The marker, popup and navigation components in react-map-gl also need the stylesheet to work properly. 
 
-You may add the stylesheet to the head of your page:
-```html
-<!-- index.html -->
+The above example code imports the CSS file directly into the app. Most bundlers support this syntax out-of-the-box or with an official plugin.
+
+Alternatively, you may add the stylesheet to the head of your page:
+
+<Tabs groupId="map-library">
+  <TabItem value="mapbox" label="Mapbox">
+
+```html title="index.html"
 <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v<YOUR_MAPBOX_VERSION>/mapbox-gl.css' rel='stylesheet' />
 ```
 
 Find out your mapbox version by running `yarn list mapbox-gl` or `npm ls mapbox-gl`.
 
-Or embed it in your app by using - [browserify-css](https://www.npmjs.com/package/browserify-css)
-with Browserify or - [css-loader](https://webpack.github.io/docs/stylesheets.html) with Webpack:
+  </TabItem>
+  <TabItem value="maplibre" label="Maplibre">
 
-```js
-// app.js
-import 'mapbox-gl/dist/mapbox-gl.css';
+```html title="index.html"
+<link href='https://unpkg.com/maplibre-gl@<YOUR_MAPLIBRE_VERSION>/dist/maplibre-gl.css' rel='stylesheet' />
 ```
 
-## Enable Right-to-Left Language Support
+Find out your maplibre version by running `yarn list maplibre-gl` or `npm ls maplibre-gl`.
 
-![Since v5.2.2](https://img.shields.io/badge/since-v5.2.2-green)
-
-```js
-import {setRTLTextPlugin} from 'react-map-gl';
-
-setRTLTextPlugin(
-  // find out the latest version at https://www.npmjs.com/package/@mapbox/mapbox-gl-rtl-text
-  'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js',
-  null,
-  // lazy: only load when the map first encounters Hebrew or Arabic text
-  true
-);
-```
-
-This is the same as `import {setRTLTextPlugin} from 'mapbox-gl'` in the browser, but will not crash in node. The export mainly offers a convenience when using server-side rendering.
-
-To use this API, consult Mapbox's [setRTLTextPlugin](https://docs.mapbox.com/mapbox-gl-js/api/#setrtltextplugin) documentation.
-
-
-## Using with Browserify, Webpack, and other JavaScript Bundlers
-
-* `browserify` - react-map-gl is extensively tested with `browserify` and works without configuration.
-
-* `webpack 2` - Most of the provided react-map-gl examples use webpack 2. Look at the [get started examples](https://github.com/uber/react-map-gl/tree/5.2-release/examples/get-started) folder for minimalist templates.
-
-* `create-react-app` - react-map-gl is compatible with [create-react-app](https://github.com/facebook/create-react-app).
-
-* `create-react-app-typescript` - react-map-gl is compatible with [create-react-app-typescript](https://github.com/wmonk/create-react-app-typescript). You can see an example [here](https://github.com/zackhsi/react-map-gl-typescript).
-
-There's many other ready-to-run [examples](https://github.com/uber/react-map-gl/tree/5.2-release/examples) you can take a look at if you need more inspiration.
+  </TabItem>
+</Tabs>

@@ -2,20 +2,16 @@
   <a href="https://npmjs.org/package/react-map-gl">
     <img src="https://img.shields.io/npm/v/react-map-gl.svg?style=flat-square" alt="version" />
   </a>
-  <a href="https://travis-ci.com/uber/react-map-gl">
-    <img src="https://api.travis-ci.com/uber/react-map-gl.svg?branch=master" alt="build" />
-  </a>
+  <a href="https://github.com/visgl/react-map-gl/actions?query=workflow%3Atest+branch%3Amaster">
+    <img src="https://github.com/visgl/react-map-gl/workflows/test/badge.svg?branch=master" alt="build" />
   <a href="https://npmjs.org/package/react-map-gl">
     <img src="https://img.shields.io/npm/dm/react-map-gl.svg?style=flat-square" alt="downloads" />
   </a>
 </p>
 
-<h1 align="center">react-map-gl | <a href="https://uber.github.io/react-map-gl">Docs</a></h1>
+<h1 align="center">react-map-gl | <a href="https://visgl.github.io/react-map-gl">Docs</a></h1>
 
-react-map-gl is a suite of [React](http://facebook.github.io/react/) components for
-[Mapbox GL JS](https://github.com/mapbox/mapbox-gl-js).
-
-Mapbox GL JS is an awesome library for making modern web maps. It is beautiful, efficient (WebGL-powered), and fully open source. You may load map data from Mapbox's own service, which is free until a certain level of traffic is exceeded; or you can create and host your own map data using one of the many [open source tools](https://github.com/mapbox/awesome-vector-tiles).
+`react-map-gl` is a suite of [React](https://react.dev/) components designed to provide a React API for [mapbox-gl](https://github.com/mapbox/mapbox-gl-js) or [maplibre-gl](https://maplibre.org/maplibre-gl-js/docs/). More information in the online documentation.
 
 See our [Design Philosophy](docs/README.md#design-philosophy).
 
@@ -24,57 +20,75 @@ See our [Design Philosophy](docs/README.md#design-philosophy).
 Using `react-map-gl` requires `react >= 16.3`.
 
 ```sh
-npm install --save react-map-gl
+# Using Maplibre
+npm install react-map-gl maplibre-gl
+```
+_or_
+
+```sh
+# Using Mapbox
+npm install react-map-gl mapbox-gl
 ```
 
 ### Example
 
 ```js
-import {Component} from 'react';
-import ReactMapGL from 'react-map-gl';
+// Using Maplibre
+import * as React from 'react';
+import Map from 'react-map-gl/maplibre';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
-class Map extends Component {
+function App() {
+  return (
+    <Map
+      initialViewState={{
+        longitude: -122.4,
+        latitude: 37.8,
+        zoom: 14
+      }}
+      style={{width: 600, height: 400}}
+      mapStyle="https://api.maptiler.com/maps/streets/style.json?key=<Maptiler access token>"
+    />
+  );
+}
+```
+_or_
 
-  state = {
-    viewport: {
-      width: 400,
-      height: 400,
-      latitude: 37.7577,
-      longitude: -122.4376,
-      zoom: 8
-    }
-  };
+```js
+// Using Mapbox
+import * as React from 'react';
+import Map from 'react-map-gl/mapbox';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
-  render() {
-    return (
-      <ReactMapGL
-        {...this.state.viewport}
-        onViewportChange={(viewport) => this.setState({viewport})}
-      />
-    );
-  }
+function App() {
+  return (
+    <Map
+      // https://visgl.github.io/react-map-gl/docs/get-started/mapbox-tokens
+      mapboxAccessToken="<Mapbox access token>"
+      initialViewState={{
+        longitude: -100,
+        latitude: 40,
+        zoom: 3.5
+      }}
+      style={{width: 600, height: 400}}
+      mapStyle="mapbox://styles/mapbox/streets-v9"
+    />
+  );
 }
 ```
 
-### Using Mapbox Tokens
-
-To show maps from a service such as Mapbox you will need to register on their website in order to retrieve an access token required by the map component, which will be used to identify you and start serving up map tiles. The service will be free until a certain level of traffic is exceeded.
-
-There are several ways to provide a token to your app, as showcased in some of the example folders:
-
-* Provide a `mapboxApiAccessToken` prop to the map component
-* Set the `MapboxAccessToken` environment variable (or set `REACT_APP_MAPBOX_ACCESS_TOKEN` if you are using Create React App)
-* Provide it in the URL, e.g `?access_token=TOKEN`
-* Provide `mapboxApiUrl` prop to the map component to override the default mapbox API URL
-
-But we would recommend using something like [dotenv](https://github.com/motdotla/dotenv) and put your key in an untracked `.env` file, that will then expose it as a `process.env` variable, with much less leaking risks.
-
-
-### Limitations
-
-This library provides convenient wrappers around initializing and (to some degree) tracking the state of a Mapbox WebGL map. Because most of the functionality of Mapbox's JS API depends on the use of HTML5 canvases and WebGL, which React is not built to manipulate, the React component does not mirror all the functionality of Mapbox GL JS's Map class. You may access the native Mapbox API exposed by the `getMap()` function in this library. However, proceed with caution as calling the native APIs may break the connection between the React layer props and the underlying map state.
+Learn more with in our [Getting Started](https://visgl.github.io/react-map-gl/docs/get-started) guide.
 
 
 ### Contribute
 
-See [developer guide](docs/developer-guide.md).
+See [contribution guide](/CONTRIBUTING.md).
+
+
+### Attributions
+
+react-map-gl is part of vis.gl, an [OpenJS Foundation](https://openjsf.org) project.
+
+Development is also supported by
+
+<img src="https://raw.githubusercontent.com/visgl/deck.gl-data/master/images/branding/mapbox.svg" height="40" />
